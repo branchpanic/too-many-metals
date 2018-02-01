@@ -1,0 +1,16 @@
+[
+{
+  "modid": "tmm",
+  "name": "Too Many Metals",
+  "description": "Define your own materials!",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["notjoe"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
