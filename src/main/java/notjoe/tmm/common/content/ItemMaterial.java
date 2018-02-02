@@ -7,12 +7,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.model.ModelLoader;
 import notjoe.tmm.TooManyMetals;
+import notjoe.tmm.api.ResourceType;
 import notjoe.tmm.api.TMaterial;
 import notjoe.tmm.api.TMaterialRegistry;
 import notjoe.tmm.common.TabResources;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ItemMaterial extends Item {
     private final ResourceType resourceType;
@@ -34,17 +36,17 @@ public class ItemMaterial extends Item {
         return resourceType;
     }
 
-    public void registerModels(List<TMaterial> materials) {
+    public void registerModels() {
+        List<TMaterial> materials = TMaterialRegistry.INSTANCE.getMaterialsByID();
         for (int i = 0; i < materials.size(); i++) {
             TMaterial material = materials.get(i);
             if (ArrayUtils.contains(material.getResourceTypes(), resourceType)) {
-                String customModelLocation = material.getCustomModelLocation();
-
-                ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:iron_ingot",
+                ModelResourceLocation modelResourceLocation = new ModelResourceLocation(getRegistryName(),
                         "inventory");
 
-                if (customModelLocation != null) {
-                    modelResourceLocation = new ModelResourceLocation(customModelLocation, "inventory");
+                Optional<String> customModelLocation = material.getCustomModelLocation(resourceType);
+                if (customModelLocation.isPresent()) {
+                    modelResourceLocation = new ModelResourceLocation(customModelLocation.get(), "inventory");
                 }
 
                 ModelLoader.setCustomModelResourceLocation(this, i, modelResourceLocation);
@@ -57,7 +59,7 @@ public class ItemMaterial extends Item {
         TMaterial material = TMaterialRegistry.INSTANCE.getMaterialByID(stack.getMetadata());
 
         if (material != null) {
-            return material.getName() + " " + resourceType.toString();
+            return resourceType.getFormattedDisplayName(material.getNameCapitalized());
         } else {
             return super.getItemStackDisplayName(stack);
         }

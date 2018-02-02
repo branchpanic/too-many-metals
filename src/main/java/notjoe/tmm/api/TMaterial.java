@@ -1,12 +1,14 @@
 package notjoe.tmm.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.netty.util.internal.StringUtil;
 import net.minecraft.item.ItemStack;
 import notjoe.tmm.common.content.ModContent;
-import notjoe.tmm.common.content.ResourceType;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Represents a TMM Material, generally a new type of metal or gem.
@@ -15,13 +17,16 @@ public class TMaterial {
     private String name;
     private int rgbColor;
     private ResourceType[] resourceTypes = new ResourceType[] {
-            ResourceType.NUGGET, ResourceType.DUST, ResourceType.INGOT, ResourceType.BLOCK, ResourceType.ORE
+            ResourceType.NUGGET, ResourceType.DUST, ResourceType.INGOT, ResourceType.BLOCK, ResourceType.ORE,
+            ResourceType.PLATE, ResourceType.GEAR
     };
-    private String customModelLocation;
     private String oreDictSuffix;
 
     @JsonProperty
     private Map<String, Integer> alloyDefinitions;
+
+    @JsonProperty
+    private Map<ResourceType, String> customModelLocations;
 
     public ItemStack createItemStack(ResourceType resourceType) {
         int meta = TMaterialRegistry.INSTANCE.nameToID(name);
@@ -35,6 +40,10 @@ public class TMaterial {
                     return new ItemStack(ModContent.RESOURCE_INGOT, 1, meta);
                 case GEM:
                     return new ItemStack(ModContent.RESOURCE_GEM, 1, meta);
+                case GEAR:
+                    return new ItemStack(ModContent.RESOURCE_GEAR, 1, meta);
+                case PLATE:
+                    return new ItemStack(ModContent.RESOURCE_PLATE, 1, meta);
                 // TODO: Implement block resources
                 case ORE:
                 case BLOCK:
@@ -50,7 +59,11 @@ public class TMaterial {
      * @return Name of this TMaterial.
      */
     public String getName() {
-        return name;
+        return name.toLowerCase();
+    }
+
+    public String getNameCapitalized() {
+        return StringUtils.capitalize(name);
     }
 
     /**
@@ -64,7 +77,11 @@ public class TMaterial {
         return resourceTypes;
     }
 
-    public String getCustomModelLocation() {
-        return customModelLocation;
+    public Optional<String> getCustomModelLocation(ResourceType type) {
+        if (customModelLocations != null && customModelLocations.containsKey(type)) {
+            return Optional.of(customModelLocations.get(type));
+        }
+
+        return Optional.empty();
     }
 }

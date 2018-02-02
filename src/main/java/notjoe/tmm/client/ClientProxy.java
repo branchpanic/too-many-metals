@@ -13,6 +13,7 @@ public class ClientProxy extends CommonProxy {
 
         ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
         itemColors.registerItemColorHandler(new DefaultItemColorHandler(), ModContent.RESOURCE_NUGGET,
-                ModContent.RESOURCE_INGOT, ModContent.RESOURCE_GEM);
+                ModContent.RESOURCE_INGOT, ModContent.RESOURCE_GEM, ModContent.RESOURCE_DUST,
+                ModContent.RESOURCE_GEAR, ModContent.RESOURCE_PLATE);
     }
 }

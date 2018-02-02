@@ -1,0 +1,12 @@
+itemGroup.tmm.resources=Resources
+
+resource.tmm.nugget=%s Nugget
+resource.tmm.dust=%s Dust
+resource.tmm.ingot=%s Ingot
+resource.tmm.gem=%s
+
+resource.tmm.ore=%s Ore
+resource.tmm.block=Block of %s
+
+resource.tmm.plate=%s Plate
+resource.tmm.gear=%s Gear

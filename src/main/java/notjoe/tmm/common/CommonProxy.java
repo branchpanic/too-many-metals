@@ -42,12 +42,6 @@ public class CommonProxy {
     public void onPreInit(FMLPreInitializationEvent event) {
         File configDirectory = new File(event.getModConfigurationDirectory(), "TooManyMetals");
 
-        if (!configDirectory.exists()) {
-            if (!configDirectory.mkdir()) {
-                LOGGER.warn("Couldn't create the configuration directory-- try to make it manually!");
-            }
-        }
-
         List<TMaterial> registeredMaterials = loadMaterials(configDirectory);
 
         if (ModConfig.logMaterials) {

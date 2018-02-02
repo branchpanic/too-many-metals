@@ -12,11 +12,6 @@ public class TabResources extends CreativeTabs {
     }
 
     @Override
-    public boolean hasSearchBar() {
-        return true;
-    }
-
-    @Override
     public ItemStack getTabIconItem() {
         return new ItemStack(Items.DIAMOND);
     }

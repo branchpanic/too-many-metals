@@ -2,7 +2,6 @@ package notjoe.tmm.api;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import notjoe.tmm.common.content.ResourceType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;

@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import notjoe.tmm.TooManyMetals;
-import notjoe.tmm.api.TMaterialRegistry;
+import notjoe.tmm.api.ResourceType;
 import notjoe.tmm.common.content.*;
 
 import static notjoe.tmm.TooManyMetals.LOGGER;
@@ -32,7 +32,9 @@ public class RegistrationEvents {
                 new ItemMaterial(ResourceType.NUGGET),
                 new ItemMaterial(ResourceType.DUST),
                 new ItemMaterial(ResourceType.INGOT),
-                new ItemMaterial(ResourceType.GEM)
+                new ItemMaterial(ResourceType.GEM),
+                new ItemMaterial(ResourceType.PLATE),
+                new ItemMaterial(ResourceType.GEAR)
         );
         LOGGER.info("Item registering finished.");
     }
@@ -40,9 +42,11 @@ public class RegistrationEvents {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void registerModels(ModelRegistryEvent event) {
-        ((ItemMaterial) ModContent.RESOURCE_NUGGET).registerModels(TMaterialRegistry.INSTANCE.getMaterialsByID());
-        ((ItemMaterial) ModContent.RESOURCE_DUST).registerModels(TMaterialRegistry.INSTANCE.getMaterialsByID());
-        ((ItemMaterial) ModContent.RESOURCE_INGOT).registerModels(TMaterialRegistry.INSTANCE.getMaterialsByID());
-        ((ItemMaterial) ModContent.RESOURCE_GEM).registerModels(TMaterialRegistry.INSTANCE.getMaterialsByID());
+        ModContent.RESOURCE_NUGGET.registerModels();
+        ModContent.RESOURCE_DUST.registerModels();
+        ModContent.RESOURCE_INGOT.registerModels();
+        ModContent.RESOURCE_GEM.registerModels();
+        ModContent.RESOURCE_PLATE.registerModels();
+        ModContent.RESOURCE_GEAR.registerModels();
     }
 }

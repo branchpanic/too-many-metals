@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "tmm:items/nugget_base",
+    "layer1": "tmm:items/nugget_highlight"
+  }
+}
