@@ -1,7 +1,6 @@
 package notjoe.tmm.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.netty.util.internal.StringUtil;
 import net.minecraft.item.ItemStack;
 import notjoe.tmm.common.content.ModContent;
 import org.apache.commons.lang3.ArrayUtils;
@@ -28,22 +27,26 @@ public class TMaterial {
     @JsonProperty
     private Map<ResourceType, String> customModelLocations;
 
-    public ItemStack createItemStack(ResourceType resourceType) {
+    private boolean registerCompactingRecipes = true;
+    private boolean registerPlateRecipe = true;
+    private boolean registerGearRecipe = true;
+
+    public ItemStack createItemStack(ResourceType resourceType, int amount) {
         int meta = TMaterialRegistry.INSTANCE.nameToID(name);
         if (ArrayUtils.contains(resourceTypes, resourceType)) {
             switch (resourceType) {
                 case NUGGET:
-                    return new ItemStack(ModContent.RESOURCE_NUGGET, 1, meta);
+                    return new ItemStack(ModContent.RESOURCE_NUGGET, amount, meta);
                 case DUST:
-                    return new ItemStack(ModContent.RESOURCE_DUST, 1, meta);
+                    return new ItemStack(ModContent.RESOURCE_DUST, amount, meta);
                 case INGOT:
-                    return new ItemStack(ModContent.RESOURCE_INGOT, 1, meta);
+                    return new ItemStack(ModContent.RESOURCE_INGOT, amount, meta);
                 case GEM:
-                    return new ItemStack(ModContent.RESOURCE_GEM, 1, meta);
+                    return new ItemStack(ModContent.RESOURCE_GEM, amount, meta);
                 case GEAR:
-                    return new ItemStack(ModContent.RESOURCE_GEAR, 1, meta);
+                    return new ItemStack(ModContent.RESOURCE_GEAR, amount, meta);
                 case PLATE:
-                    return new ItemStack(ModContent.RESOURCE_PLATE, 1, meta);
+                    return new ItemStack(ModContent.RESOURCE_PLATE, amount, meta);
                 // TODO: Implement block resources
                 case ORE:
                 case BLOCK:
@@ -55,6 +58,10 @@ public class TMaterial {
         return ItemStack.EMPTY;
     }
 
+    public ItemStack createItemStack(ResourceType resourceType) {
+        return createItemStack(resourceType, 1);
+    }
+
     /**
      * @return Name of this TMaterial.
      */
@@ -64,6 +71,14 @@ public class TMaterial {
 
     public String getNameCapitalized() {
         return StringUtils.capitalize(name);
+    }
+
+    public boolean hasResourceType(ResourceType type) {
+        return ArrayUtils.contains(resourceTypes, type);
+    }
+
+    public String getOreDictName(ResourceType type) {
+        return type.getOreDictPrefix() + getNameCapitalized();
     }
 
     /**
@@ -83,5 +98,17 @@ public class TMaterial {
         }
 
         return Optional.empty();
+    }
+
+    public boolean isRegisterCompactingRecipes() {
+        return registerCompactingRecipes;
+    }
+
+    public boolean isRegisterPlateRecipe() {
+        return registerPlateRecipe;
+    }
+
+    public boolean isRegisterGearRecipe() {
+        return registerGearRecipe;
     }
 }
