@@ -1,5 +1,7 @@
 package notjoe.tmm.common;
 
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import notjoe.tmm.api.TMaterial;
 import notjoe.tmm.api.TMaterialRegistry;
@@ -22,6 +24,7 @@ public class CommonProxy {
             LOGGER.error("Configuration directory is missing!");
         }
 
+        loader.registerDefinedMaterials();
         return loader.getDefinedMaterials();
     }
 
@@ -37,7 +40,7 @@ public class CommonProxy {
     }
 
     public void onPreInit(FMLPreInitializationEvent event) {
-        File configDirectory = event.getModConfigurationDirectory();
+        File configDirectory = new File(event.getModConfigurationDirectory(), "TooManyMetals");
 
         if (!configDirectory.exists()) {
             if (!configDirectory.mkdir()) {
@@ -45,10 +48,18 @@ public class CommonProxy {
             }
         }
 
-        List<TMaterial> registeredMaterials = loadMaterials(event.getModConfigurationDirectory());
+        List<TMaterial> registeredMaterials = loadMaterials(configDirectory);
 
         if (ModConfig.logMaterials) {
             listMaterials(registeredMaterials);
         }
+    }
+
+    public void onInit(FMLInitializationEvent event) {
+
+    }
+
+    public void onPostInit(FMLPostInitializationEvent event) {
+
     }
 }

@@ -29,11 +29,15 @@ public class TooManyMetals {
     
     @EventHandler
     public void onInit(FMLInitializationEvent event) {
-
+        LOGGER.info("Starting init.");
+        PROXY.onInit(event);
+        LOGGER.info("Init completed.");
     }
 
     @EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
-
+        LOGGER.info("Starting post-init.");
+        PROXY.onPostInit(event);
+        LOGGER.info("Post-init completed.");
     }
 }

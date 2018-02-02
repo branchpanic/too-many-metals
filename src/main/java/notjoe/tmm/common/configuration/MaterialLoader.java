@@ -33,7 +33,8 @@ public class MaterialLoader {
                 } catch (IOException e) {
                     TooManyMetals.LOGGER.error("Failed to load material definition: " + definitionFile.getName());
                     TooManyMetals.LOGGER.error("Try making sure that your YAML syntax is correct and that all" +
-                            "necessary values are fulfilled.");
+                            "necessary values are fulfilled. See the error description below for more info.");
+                    TooManyMetals.LOGGER.error(e);
                 }
             }
         }

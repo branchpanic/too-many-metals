@@ -1,28 +1,26 @@
 package notjoe.tmm.api;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
 import java.util.*;
+import java.util.function.BiConsumer;
 
 /**
- * Main registrar for all materials defined through TooManyMetals. Maps material definitions by name and numerical ID.
+ * Main registrar for all registeredMaterials defined through TooManyMetals. Maps material definitions by name and numerical ID.
  */
 public enum TMaterialRegistry {
     INSTANCE;
 
-    private Map<String, TMaterial> materials;
+    private Map<String, TMaterial> registeredMaterials;
 
-    public Map<String, TMaterial> getMaterials() {
-        if (materials == null) {
-            materials = new LinkedHashMap<>();
+    public Map<String, TMaterial> getRegisteredMaterials() {
+        if (registeredMaterials == null) {
+            registeredMaterials = new LinkedHashMap<>();
         }
 
-        return materials;
+        return registeredMaterials;
     }
 
     public List<TMaterial> getMaterialsByID() {
-        return new ArrayList<>(materials.values());
+        return new ArrayList<>(registeredMaterials.values());
     }
 
     public void registerAllMaterials(Collection<TMaterial> materials) {
@@ -30,19 +28,26 @@ public enum TMaterialRegistry {
     }
 
     public void registerMaterial(TMaterial material) {
-        getMaterials().put(material.getName(), material);
+        getRegisteredMaterials().put(material.getName(), material);
     }
 
     public TMaterial getMaterial(String name) {
-        return materials.get(name);
+        return registeredMaterials.get(name);
     }
 
     public TMaterial getMaterialByID(int id) {
         return getMaterialsByID().get(id);
     }
 
+    public void forEachMaterial(BiConsumer<Integer, TMaterial> action) {
+        List<TMaterial> materials = getMaterialsByID();
+        for (int i = 0; i < materials.size(); i++) {
+            action.accept(i, materials.get(i));
+        }
+    }
+
     public int nameToID(String materialName) {
-        List<String> names = new ArrayList<>(materials.keySet());
+        List<String> names = new ArrayList<>(registeredMaterials.keySet());
         return names.indexOf(materialName);
     }
 }
