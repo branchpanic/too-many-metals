@@ -1,5 +1,10 @@
 package notjoe.tmm.api;
 
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+import notjoe.tmm.common.content.ResourceType;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -49,5 +54,20 @@ public enum TMaterialRegistry {
     public int nameToID(String materialName) {
         List<String> names = new ArrayList<>(registeredMaterials.keySet());
         return names.indexOf(materialName);
+    }
+
+    public ItemStack getStackFromDefinition(String name, ResourceType resourceType) {
+        return getMaterial(name).createItemStack(resourceType);
+    }
+
+    public void registerOreDictEntries() {
+        forEachMaterial((id, material) -> {
+            for (ResourceType type : material.getResourceTypes()) {
+                OreDictionary.registerOre(
+                        type.getOreDictPrefix() + StringUtils.capitalize(material.getName()),
+                        material.createItemStack(type)
+                );
+            }
+        });
     }
 }

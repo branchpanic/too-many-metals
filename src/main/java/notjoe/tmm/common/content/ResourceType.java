@@ -1,19 +1,27 @@
 package notjoe.tmm.common.content;
 
+import org.apache.commons.lang3.StringUtils;
+
 public enum ResourceType {
-    NUGGET(1),
-    INGOT(9),
-    GEM(9),
-    BLOCK(81);
+    NUGGET("nugget"),
+    DUST("dust"),
+    INGOT("ingot"),
+    GEM("gem"),
 
-    public final int amount;
+    ORE("ore"),
+    BLOCK("block");
 
-    ResourceType(int amount) {
-        this.amount = amount;
+    private String oreDictPrefix;
+    ResourceType(String oreDictPrefix) {
+        this.oreDictPrefix = oreDictPrefix;
     }
 
     @Override
     public String toString() {
-        return name().toLowerCase();
+        return StringUtils.capitalize(name().toLowerCase());
+    }
+
+    public String getOreDictPrefix() {
+        return oreDictPrefix;
     }
 }

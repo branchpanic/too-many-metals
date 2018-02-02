@@ -60,6 +60,6 @@ public class CommonProxy {
     }
 
     public void onPostInit(FMLPostInitializationEvent event) {
-
+        TMaterialRegistry.INSTANCE.registerOreDictEntries();
     }
 }

@@ -1,6 +1,5 @@
 package notjoe.tmm.common.content;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -10,23 +9,25 @@ import net.minecraftforge.client.model.ModelLoader;
 import notjoe.tmm.TooManyMetals;
 import notjoe.tmm.api.TMaterial;
 import notjoe.tmm.api.TMaterialRegistry;
+import notjoe.tmm.common.TabResources;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
-import static notjoe.tmm.TooManyMetals.LOGGER;
-
-public class MaterialItem extends Item {
+public class ItemMaterial extends Item {
     private final ResourceType resourceType;
 
-    public MaterialItem(ResourceType resourceType) {
+    public ItemMaterial(ResourceType resourceType) {
         this.resourceType = resourceType;
 
         String internalName = "resource_" + resourceType.toString();
 
         setUnlocalizedName("tmm." + internalName);
         setRegistryName(TooManyMetals.MODID, internalName);
+
+        setMaxDamage(0);
+        setHasSubtypes(true);
+        setCreativeTab(TabResources.CREATIVE_TAB);
     }
 
     public ResourceType getResourceType() {
@@ -37,15 +38,12 @@ public class MaterialItem extends Item {
         for (int i = 0; i < materials.size(); i++) {
             TMaterial material = materials.get(i);
             if (ArrayUtils.contains(material.getResourceTypes(), resourceType)) {
-                String customModelLocation = material.getCustomModel();
-
-                System.out.println("Registering models");
+                String customModelLocation = material.getCustomModelLocation();
 
                 ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:iron_ingot",
                         "inventory");
 
                 if (customModelLocation != null) {
-                    System.out.println("There is a custom model");
                     modelResourceLocation = new ModelResourceLocation(customModelLocation, "inventory");
                 }
 
@@ -59,7 +57,7 @@ public class MaterialItem extends Item {
         TMaterial material = TMaterialRegistry.INSTANCE.getMaterialByID(stack.getMetadata());
 
         if (material != null) {
-            return material.getName() + " " + StringUtils.capitalize(resourceType.toString());
+            return material.getName() + " " + resourceType.toString();
         } else {
             return super.getItemStackDisplayName(stack);
         }
