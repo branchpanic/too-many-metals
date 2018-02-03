@@ -1,5 +1,11 @@
 package notjoe.tmm.common.integration;
 
-public class IntegrationHandler {
+import net.minecraftforge.fml.common.Loader;
 
+public class IntegrationHandler {
+    public static void onPreInit() {
+        if (Loader.isModLoaded("tconstruct")) {
+            TinkersIntegration.sendSmelteryDefinitions();
+        }
+    }
 }

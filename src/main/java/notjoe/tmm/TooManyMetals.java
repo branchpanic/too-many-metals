@@ -1,5 +1,6 @@
 package notjoe.tmm;
 
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -18,6 +19,10 @@ public class TooManyMetals {
             serverSide = "notjoe.tmm.common.CommonProxy")
     public static CommonProxy PROXY;
     public static Logger LOGGER;
+
+    static {
+        FluidRegistry.enableUniversalBucket();
+    }
 
     @EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {

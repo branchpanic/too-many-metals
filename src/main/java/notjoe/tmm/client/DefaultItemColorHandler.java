@@ -15,9 +15,9 @@ public class DefaultItemColorHandler implements IItemColor {
         }
 
         int id = stack.getMetadata();
-        TMaterial material = TMaterialRegistry.INSTANCE.getMaterialByID(id);
+        TMaterial material = TMaterialRegistry.INSTANCE.getMaterial(id);
 
-        if (material != null && !material.getCustomModelLocation(ResourceType.getTypeFromItem(stack)).isPresent()) {
+        if (material != null && !material.getCustomModelFor(ResourceType.getTypeFromItem(stack)).isPresent()) {
             return material.getRgbColor();
         } else {
             return 0xFFFFFF;

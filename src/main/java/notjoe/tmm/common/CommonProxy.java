@@ -7,6 +7,7 @@ import notjoe.tmm.api.TMaterial;
 import notjoe.tmm.api.TMaterialRegistry;
 import notjoe.tmm.common.configuration.MaterialLoader;
 import notjoe.tmm.common.configuration.ModConfig;
+import notjoe.tmm.common.integration.IntegrationHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,7 +34,7 @@ public class CommonProxy {
         LOGGER.info(String.format("  %-3s%-30s", "ID", "Name"));
         for (TMaterial material : materials) {
             LOGGER.info(String.format("  %-3d%-30s",
-                    TMaterialRegistry.INSTANCE.nameToID(material.getName()),
+                    TMaterialRegistry.INSTANCE.getIDFromName(material.getName()),
                     material.getName()));
         }
         LOGGER.info("== End of registered materials.");
@@ -47,6 +48,9 @@ public class CommonProxy {
         if (ModConfig.logMaterials) {
             listMaterials(registeredMaterials);
         }
+
+        TMaterialRegistry.INSTANCE.createFluids();
+        IntegrationHandler.onPreInit();
     }
 
     public void onInit(FMLInitializationEvent event) {

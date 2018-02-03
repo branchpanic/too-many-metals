@@ -44,7 +44,7 @@ public class ItemMaterial extends Item {
                 ModelResourceLocation modelResourceLocation = new ModelResourceLocation(getRegistryName(),
                         "inventory");
 
-                Optional<String> customModelLocation = material.getCustomModelLocation(resourceType);
+                Optional<String> customModelLocation = material.getCustomModelFor(resourceType);
                 if (customModelLocation.isPresent()) {
                     modelResourceLocation = new ModelResourceLocation(customModelLocation.get(), "inventory");
                 }
@@ -56,7 +56,7 @@ public class ItemMaterial extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        TMaterial material = TMaterialRegistry.INSTANCE.getMaterialByID(stack.getMetadata());
+        TMaterial material = TMaterialRegistry.INSTANCE.getMaterial(stack.getMetadata());
 
         if (material != null) {
             return resourceType.getFormattedDisplayName(material.getNameCapitalized());

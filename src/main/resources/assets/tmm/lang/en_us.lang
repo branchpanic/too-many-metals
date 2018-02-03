@@ -10,3 +10,5 @@ resource.tmm.block=Block of %s
 
 resource.tmm.plate=%s Plate
 resource.tmm.gear=%s Gear
+
+tmm.fluid=Molten %s

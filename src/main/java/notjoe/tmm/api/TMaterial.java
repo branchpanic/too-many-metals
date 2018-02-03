@@ -1,7 +1,9 @@
 package notjoe.tmm.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidRegistry;
 import notjoe.tmm.common.content.ModContent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,25 +16,39 @@ import java.util.Optional;
  */
 public class TMaterial {
     private String name;
-    private int rgbColor;
+
+    @Getter
+    int fluidDensity = FluidRegistry.LAVA.getDensity();
+    @Getter
+    int fluidViscosity = FluidRegistry.LAVA.getViscosity();
+    @Getter
+    int fluidLuminosity = FluidRegistry.LAVA.getLuminosity();
+    @Getter
+    int fluidTemperature = FluidRegistry.LAVA.getTemperature();
+    @Getter
     private ResourceType[] resourceTypes = new ResourceType[] {
             ResourceType.NUGGET, ResourceType.DUST, ResourceType.INGOT, ResourceType.BLOCK, ResourceType.ORE,
             ResourceType.PLATE, ResourceType.GEAR
     };
+    @JsonProperty
+    @Getter
+    private Map<String, Double> alloyOf;
+    @JsonProperty
+    private Map<ResourceType, String> customModels;
+    @Getter
+    private int rgbColor;
     private String oreDictSuffix;
-
-    @JsonProperty
-    private Map<String, Integer> alloyDefinitions;
-
-    @JsonProperty
-    private Map<ResourceType, String> customModelLocations;
-
-    private boolean registerCompactingRecipes = true;
-    private boolean registerPlateRecipe = true;
-    private boolean registerGearRecipe = true;
+    @Getter
+    private boolean addingCompactingRecipes = true;
+    @Getter
+    private boolean addingPlateRecipes = true;
+    @Getter
+    private boolean addingGearRecipes = true;
+    @Getter
+    private boolean bucketAvailable = true;
 
     public ItemStack createItemStack(ResourceType resourceType, int amount) {
-        int meta = TMaterialRegistry.INSTANCE.nameToID(name);
+        int meta = TMaterialRegistry.INSTANCE.getIDFromName(name);
         if (ArrayUtils.contains(resourceTypes, resourceType)) {
             switch (resourceType) {
                 case NUGGET:
@@ -62,9 +78,36 @@ public class TMaterial {
         return createItemStack(resourceType, 1);
     }
 
-    /**
-     * @return Name of this TMaterial.
-     */
+    public boolean hasResourceType(ResourceType type) {
+        return ArrayUtils.contains(resourceTypes, type);
+    }
+
+    public boolean hasBaseResourceType() {
+        return hasResourceType(ResourceType.INGOT) || hasResourceType(ResourceType.GEM);
+    }
+
+    public boolean isAlloy() {
+        return alloyOf != null;
+    }
+
+    public ResourceType getBaseResourceType() {
+        if (hasResourceType(ResourceType.INGOT)) {
+            return ResourceType.INGOT;
+        } else if (hasResourceType(ResourceType.GEM)) {
+            return ResourceType.GEM;
+        }
+
+        return null;
+    }
+
+    public Optional<String> getCustomModelFor(ResourceType type) {
+        if (customModels != null && customModels.containsKey(type)) {
+            return Optional.of(customModels.get(type));
+        }
+
+        return Optional.empty();
+    }
+
     public String getName() {
         return name.toLowerCase();
     }
@@ -73,42 +116,15 @@ public class TMaterial {
         return StringUtils.capitalize(name);
     }
 
-    public boolean hasResourceType(ResourceType type) {
-        return ArrayUtils.contains(resourceTypes, type);
-    }
-
     public String getOreDictName(ResourceType type) {
         return type.getOreDictPrefix() + getNameCapitalized();
     }
 
-    /**
-     * @return Color (RGB Hex) of this TMaterial.
-     */
-    public int getRgbColor() {
-        return rgbColor;
-    }
-
-    public ResourceType[] getResourceTypes() {
-        return resourceTypes;
-    }
-
-    public Optional<String> getCustomModelLocation(ResourceType type) {
-        if (customModelLocations != null && customModelLocations.containsKey(type)) {
-            return Optional.of(customModelLocations.get(type));
+    public String getOreDictSuffix() {
+        if (oreDictSuffix == null) {
+            return getNameCapitalized();
         }
 
-        return Optional.empty();
-    }
-
-    public boolean isRegisterCompactingRecipes() {
-        return registerCompactingRecipes;
-    }
-
-    public boolean isRegisterPlateRecipe() {
-        return registerPlateRecipe;
-    }
-
-    public boolean isRegisterGearRecipe() {
-        return registerGearRecipe;
+        return oreDictSuffix;
     }
 }

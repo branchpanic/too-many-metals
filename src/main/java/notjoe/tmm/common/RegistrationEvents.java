@@ -23,8 +23,9 @@ public class RegistrationEvents {
     public static void onRegisterBlocks(RegistryEvent.Register<Block> blockRegistryEvent) {
         LOGGER.info("Block registering started.");
         blockRegistryEvent.getRegistry().registerAll(
-
+                // Ores and stuff would go here...
         );
+
         LOGGER.info("Block registering finished.");
     }
 
