@@ -1,5 +1,8 @@
 {
   "parent": "block/block",
+  "textures": {
+    "particle": "tmm:blocks/resource_block"
+  },
   "elements": [
     {
       "from": [

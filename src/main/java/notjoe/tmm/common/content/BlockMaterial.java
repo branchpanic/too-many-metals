@@ -1,6 +1,7 @@
 package notjoe.tmm.common.content;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -30,6 +31,12 @@ public class BlockMaterial extends Block {
         setRegistryName(TooManyMetals.MODID, internalName);
 
         setCreativeTab(TabResources.CREATIVE_TAB);
+
+        if (resourceType == ResourceType.ORE) {
+            setSoundType(SoundType.STONE);
+        } else if (resourceType == ResourceType.BLOCK) {
+            setSoundType(SoundType.METAL);
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import notjoe.tmm.common.content.BlockMaterial;
+import notjoe.tmm.common.content.FluidMaterial;
 import notjoe.tmm.common.content.ItemMaterial;
 
 import javax.annotation.Nonnull;
@@ -18,6 +19,7 @@ public enum TMaterialContentFactory {
 
     private TMaterialRegistry registry = TMaterialRegistry.INSTANCE;
     private Map<String, Map<ResourceType, Object>> materialContent;
+    private Map<String, FluidMaterial> fluidDefinitions;
 
     public Map<String, Map<ResourceType, Object>> getMaterialContent() {
         if (materialContent == null) {
@@ -25,6 +27,14 @@ public enum TMaterialContentFactory {
         }
 
         return materialContent;
+    }
+
+    public Map<String, FluidMaterial> getFluidDefinitions() {
+        if (fluidDefinitions == null) {
+            fluidDefinitions = new HashMap<>();
+        }
+
+        return fluidDefinitions;
     }
 
     public List<ItemMaterial> getItems() {
@@ -113,5 +123,6 @@ public enum TMaterialContentFactory {
         }
 
         getMaterialContent().put(material.getName(), contentMap);
+        getFluidDefinitions().put(material.getName(), new FluidMaterial(material));
     }
 }

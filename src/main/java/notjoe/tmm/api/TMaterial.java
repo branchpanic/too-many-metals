@@ -3,9 +3,11 @@ package notjoe.tmm.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import net.minecraftforge.fluids.FluidRegistry;
+import notjoe.tmm.TooManyMetals;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,9 +35,10 @@ public class TMaterial {
     private Map<String, Double> alloyOf;
     @JsonProperty
     private Map<ResourceType, String> customModels;
-    @Getter
-    private int rgbColor;
+
+    private String rgbColor;
     private String oreDictSuffix;
+
     @Getter
     private boolean addingCompactingRecipes = true;
     @Getter
@@ -44,6 +47,13 @@ public class TMaterial {
     private boolean addingGearRecipes = true;
     @Getter
     private boolean bucketAvailable = true;
+
+    @Getter
+    private int oreMiningLevel = 1;
+    @Getter
+    private float hardness;
+    @Getter
+    private float resistance;
 
     public boolean hasResourceType(ResourceType type) {
         return ArrayUtils.contains(resourceTypes, type);
@@ -93,5 +103,14 @@ public class TMaterial {
         }
 
         return oreDictSuffix;
+    }
+
+    public int getRgbColor() {
+        try {
+            return new Color(Integer.parseUnsignedInt(rgbColor.substring(Math.max(0, rgbColor.length() - 6)), 16)).getRGB();
+        } catch (Exception e) {
+            TooManyMetals.LOGGER.warn("Invalid color format for " + getName() + "!");
+            return 0;
+        }
     }
 }
