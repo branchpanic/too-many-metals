@@ -1,8 +1,11 @@
 package notjoe.tmm.common.content;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import notjoe.tmm.TooManyMetals;
@@ -12,21 +15,26 @@ import notjoe.tmm.common.TabResources;
 
 import java.util.Optional;
 
-public class ItemMaterial extends Item {
-    private final ResourceType resourceType;
+public class BlockMaterial extends Block {
     private final TMaterial tMaterial;
+    private final ResourceType resourceType;
 
-    public ItemMaterial(TMaterial tMaterial, ResourceType resourceType) {
-        this.resourceType = resourceType;
+    public BlockMaterial(TMaterial tMaterial, ResourceType resourceType) {
+        super(Material.IRON);
         this.tMaterial = tMaterial;
+        this.resourceType = resourceType;
 
         String internalName = tMaterial.getName() + "_" + resourceType.toString();
 
         setUnlocalizedName("tmm." + internalName);
         setRegistryName(TooManyMetals.MODID, internalName);
 
-        setMaxDamage(0);
         setCreativeTab(TabResources.CREATIVE_TAB);
+    }
+
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     public ResourceType getResourceType() {
@@ -37,7 +45,7 @@ public class ItemMaterial extends Item {
         return tMaterial;
     }
 
-    public void registerModels() {
+    public ModelResourceLocation getModelResourceLocation() {
         ModelResourceLocation modelResourceLocation = new ModelResourceLocation(new ResourceLocation(TooManyMetals.MODID, "resource_" + resourceType.toString()), "inventory");
 
         Optional<String> customModelLocation = tMaterial.getCustomModelFor(resourceType);
@@ -45,11 +53,22 @@ public class ItemMaterial extends Item {
             modelResourceLocation = new ModelResourceLocation(customModelLocation.get(), "inventory");
         }
 
-        ModelLoader.setCustomModelResourceLocation(this, 0, modelResourceLocation);
+        return modelResourceLocation;
+    }
+
+    public void registerModels() {
+        ModelLoader.setCustomStateMapper(this, new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return BlockMaterial.this.getModelResourceLocation();
+            }
+        });
     }
 
     @Override
-    public String getItemStackDisplayName(ItemStack stack) {
+    public String getLocalizedName() {
         return resourceType.getFormattedDisplayName(tMaterial.getNameCapitalized());
     }
+
+
 }

@@ -49,7 +49,6 @@ public class CommonProxy {
             listMaterials(registeredMaterials);
         }
 
-        TMaterialRegistry.INSTANCE.createFluids();
         IntegrationHandler.onPreInit();
     }
 

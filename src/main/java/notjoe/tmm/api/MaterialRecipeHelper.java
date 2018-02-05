@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class MaterialRecipeHelper {
+    private static TMaterialContentFactory contentFactory = TMaterialContentFactory.INSTANCE;
     private TMaterial input;
 
     public MaterialRecipeHelper(TMaterial input) {
@@ -22,7 +23,7 @@ public class MaterialRecipeHelper {
         ResourceLocation name = new ResourceLocation(TooManyMetals.MODID, input.getName() + "_" + small.toString() + "_to_" + large.toString());
         return new ShapelessOreRecipe(
                 name,
-                input.createItemStack(large),
+                contentFactory.getItemStack(input.getName(), large),
                 NonNullList.withSize(9, input.getOreDictName(small)).toArray()
         ).setRegistryName(name);
     }
@@ -31,7 +32,7 @@ public class MaterialRecipeHelper {
         ResourceLocation name = new ResourceLocation(TooManyMetals.MODID, input.getName() + "_" + large.toString() + "_to_" + small.toString());
         return new ShapelessOreRecipe(
                 name,
-                input.createItemStack(small, 9),
+                contentFactory.getItemStack(input.getName(), small, 9),
                 input.getOreDictName(large)
         ).setRegistryName(name);
     }
@@ -40,7 +41,7 @@ public class MaterialRecipeHelper {
         ResourceLocation name = new ResourceLocation(TooManyMetals.MODID, input.getName() + "_gear");
         return new ShapedOreRecipe(
                 name,
-                input.createItemStack(ResourceType.GEAR),
+                contentFactory.getItemStack(input.getName(), ResourceType.GEAR),
                 " x ",
                 "xix",
                 " x ",
@@ -53,7 +54,7 @@ public class MaterialRecipeHelper {
         ResourceLocation name = new ResourceLocation(TooManyMetals.MODID, input.getName() + "_plate");
         return new ShapedOreRecipe(
                 name,
-                input.createItemStack(ResourceType.PLATE),
+                contentFactory.getItemStack(input.getName(), ResourceType.PLATE),
                 "xx",
                 "xx",
                 'x', input.getOreDictName(input.getBaseResourceType())

@@ -1,23 +1,43 @@
 package notjoe.tmm.client;
 
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import notjoe.tmm.api.ResourceType;
 import notjoe.tmm.api.TMaterial;
-import notjoe.tmm.api.TMaterialRegistry;
+import notjoe.tmm.common.content.BlockMaterial;
+import notjoe.tmm.common.content.ItemBlockMaterial;
 import notjoe.tmm.common.content.ItemMaterial;
 
 public class DefaultItemColorHandler implements IItemColor {
     @Override
     public int colorMultiplier(ItemStack stack, int tintIndex) {
-        if (!(stack.getItem() instanceof ItemMaterial) || tintIndex > 0) {
+        if (tintIndex > 0) {
             return 0xFFFFFF;
         }
 
-        int id = stack.getMetadata();
-        TMaterial material = TMaterialRegistry.INSTANCE.getMaterial(id);
+        Item stackItem = stack.getItem();
+        if (stackItem instanceof ItemMaterial) {
+            return getItemColor((ItemMaterial) stackItem);
+        } else if (stackItem instanceof ItemBlockMaterial) {
+            return getBlockColor((ItemBlockMaterial) stackItem);
+        }
 
-        if (material != null && !material.getCustomModelFor(ResourceType.getTypeFromItem(stack)).isPresent()) {
+        return 0xFFFFFF;
+    }
+
+    public int getItemColor(ItemMaterial item) {
+        TMaterial material = item.getTMaterial();
+        if (material != null && !material.getCustomModelFor(item.getResourceType()).isPresent()) {
+            return material.getRgbColor();
+        } else {
+            return 0xFFFFFF;
+        }
+    }
+
+    public int getBlockColor(ItemBlockMaterial item) {
+        BlockMaterial blockMaterial = (BlockMaterial) item.getBlock();
+        TMaterial material = blockMaterial.getTMaterial();
+        if (material != null && !material.getCustomModelFor(blockMaterial.getResourceType()).isPresent()) {
             return material.getRgbColor();
         } else {
             return 0xFFFFFF;

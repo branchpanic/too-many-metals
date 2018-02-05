@@ -2,9 +2,7 @@ package notjoe.tmm.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
-import notjoe.tmm.common.content.ModContent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -46,37 +44,6 @@ public class TMaterial {
     private boolean addingGearRecipes = true;
     @Getter
     private boolean bucketAvailable = true;
-
-    public ItemStack createItemStack(ResourceType resourceType, int amount) {
-        int meta = TMaterialRegistry.INSTANCE.getIDFromName(name);
-        if (ArrayUtils.contains(resourceTypes, resourceType)) {
-            switch (resourceType) {
-                case NUGGET:
-                    return new ItemStack(ModContent.RESOURCE_NUGGET, amount, meta);
-                case DUST:
-                    return new ItemStack(ModContent.RESOURCE_DUST, amount, meta);
-                case INGOT:
-                    return new ItemStack(ModContent.RESOURCE_INGOT, amount, meta);
-                case GEM:
-                    return new ItemStack(ModContent.RESOURCE_GEM, amount, meta);
-                case GEAR:
-                    return new ItemStack(ModContent.RESOURCE_GEAR, amount, meta);
-                case PLATE:
-                    return new ItemStack(ModContent.RESOURCE_PLATE, amount, meta);
-                // TODO: Implement block resources
-                case ORE:
-                case BLOCK:
-                default:
-                    break;
-            }
-        }
-
-        return ItemStack.EMPTY;
-    }
-
-    public ItemStack createItemStack(ResourceType resourceType) {
-        return createItemStack(resourceType, 1);
-    }
 
     public boolean hasResourceType(ResourceType type) {
         return ArrayUtils.contains(resourceTypes, type);

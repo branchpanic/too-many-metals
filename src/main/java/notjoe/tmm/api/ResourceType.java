@@ -1,27 +1,26 @@
 package notjoe.tmm.api;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import notjoe.tmm.common.content.ModContent;
 import org.apache.commons.lang3.StringUtils;
 
 public enum ResourceType {
-    NUGGET("nugget"),
-    DUST("dust"),
-    INGOT("ingot"),
-    GEM("gem"),
+    NUGGET("nugget", true),
+    DUST("dust", true),
+    INGOT("ingot", true),
+    GEM("gem", true),
 
-    ORE("ore"),
-    BLOCK("block"),
+    ORE("ore", false),
+    BLOCK("block", false),
 
-    PLATE("plate"),
-    GEAR("gear");
+    PLATE("plate", true),
+    GEAR("gear", true);
 
     private String oreDictPrefix;
-    ResourceType(String oreDictPrefix) {
+    private boolean item;
+
+    ResourceType(String oreDictPrefix, boolean item) {
         this.oreDictPrefix = oreDictPrefix;
+        this.item = item;
     }
 
     @Override
@@ -41,24 +40,7 @@ public enum ResourceType {
         return I18n.format(getLangFormatString(), resourceName);
     }
 
-    public static ResourceType getTypeFromItem(ItemStack stack) {
-        Item item = stack.getItem();
-        if (item == ModContent.RESOURCE_NUGGET) {
-            return NUGGET;
-        } else if (item == ModContent.RESOURCE_DUST) {
-            return DUST;
-        } else if (item == ModContent.RESOURCE_INGOT) {
-            return INGOT;
-        } else if (item == ModContent.RESOURCE_GEM) {
-            return GEM;
-        } else if (item == ModContent.RESOURCE_PLATE) {
-            return PLATE;
-        } else if (item == ModContent.RESOURCE_GEAR) {
-            return GEAR;
-        }
-
-        // TODO: Blocks
-
-        return null;
+    public boolean isItem() {
+        return item;
     }
 }

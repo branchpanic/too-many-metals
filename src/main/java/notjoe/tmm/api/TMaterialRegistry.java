@@ -15,7 +15,6 @@ public enum TMaterialRegistry {
     INSTANCE;
 
     private Map<String, TMaterial> registeredMaterials;
-    private Map<Integer, JointFluidDefinition> fluidDefinitions;
 
     public Map<String, TMaterial> getRegisteredMaterials() {
         if (registeredMaterials == null) {
@@ -29,24 +28,13 @@ public enum TMaterialRegistry {
         return new ArrayList<>(getRegisteredMaterials().values());
     }
 
-    public Map<Integer, JointFluidDefinition> getFluidDefinitions() {
-        if (fluidDefinitions == null) {
-            fluidDefinitions = new HashMap<>();
-        }
-
-        return fluidDefinitions;
-    }
-
     public void registerAllMaterials(Collection<TMaterial> materials) {
         materials.forEach(this::registerMaterial);
     }
 
     public void registerMaterial(TMaterial material) {
         getRegisteredMaterials().put(material.getName(), material);
-    }
-
-    public void createFluids() {
-        forEachMaterial((id, material) -> getFluidDefinitions().put(id, new JointFluidDefinition(material)));
+        TMaterialContentFactory.INSTANCE.registerMaterial(material);
     }
 
     public TMaterial getMaterial(String name) {
@@ -74,13 +62,13 @@ public enum TMaterialRegistry {
             for (ResourceType type : material.getResourceTypes()) {
                 OreDictionary.registerOre(
                         type.getOreDictPrefix() + StringUtils.capitalize(material.getName()),
-                        material.createItemStack(type)
+                        TMaterialContentFactory.INSTANCE.getItemStack(material.getName(), type)
                 );
             }
         });
     }
 
-    public void registerVanillaRecipes(IForgeRegistry<IRecipe> recipeRegistry) {
+    public void registerCraftingRecipes(IForgeRegistry<IRecipe> recipeRegistry) {
         forEachMaterial((id, material) -> {
             MaterialRecipeHelper recipeHelper = new MaterialRecipeHelper(material);
             recipeRegistry.registerAll(recipeHelper.getPossibleCraftingRecipes().toArray(new IRecipe[]{}));
