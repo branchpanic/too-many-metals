@@ -16,6 +16,8 @@ import java.util.List;
 import static notjoe.tmm.TooManyMetals.LOGGER;
 
 public class CommonProxy {
+    public static IntegrationHandler integrationHandler = new IntegrationHandler();
+
     private List<TMaterial> loadMaterials(File directory) {
         MaterialLoader loader = new MaterialLoader(directory);
 
@@ -49,14 +51,15 @@ public class CommonProxy {
             listMaterials(registeredMaterials);
         }
 
-        IntegrationHandler.onPreInit();
+        integrationHandler.onPreInit();
     }
 
     public void onInit(FMLInitializationEvent event) {
-
+        TMaterialRegistry.INSTANCE.registerOreDictEntries();
+        integrationHandler.onInit();
     }
 
     public void onPostInit(FMLPostInitializationEvent event) {
-        TMaterialRegistry.INSTANCE.registerOreDictEntries();
+
     }
 }

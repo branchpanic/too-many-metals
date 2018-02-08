@@ -26,7 +26,7 @@ public class DefaultBlockColorHandler implements IBlockColor {
         BlockMaterial blockMaterial = (BlockMaterial) block;
         TMaterial material = blockMaterial.getTMaterial();
         if (material != null && !material.getCustomModelFor(blockMaterial.getResourceType()).isPresent()) {
-            return material.getRgbColor();
+            return material.getColorInt();
         } else {
             return 0xFFFFFF;
         }

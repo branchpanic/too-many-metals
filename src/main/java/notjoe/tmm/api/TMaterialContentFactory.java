@@ -3,6 +3,7 @@ package notjoe.tmm.api;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import notjoe.tmm.common.content.BlockMaterial;
 import notjoe.tmm.common.content.FluidMaterial;
 import notjoe.tmm.common.content.ItemMaterial;
@@ -110,6 +111,10 @@ public enum TMaterialContentFactory {
         }
 
         return null;
+    }
+
+    public Fluid getFluid(String material) {
+        return getFluidDefinitions().get(material);
     }
 
     public void registerMaterial(TMaterial material) {

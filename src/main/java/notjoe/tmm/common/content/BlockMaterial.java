@@ -32,6 +32,10 @@ public class BlockMaterial extends Block {
 
         setCreativeTab(TabResources.CREATIVE_TAB);
 
+        setHardness(tMaterial.getHardness());
+        setResistance(tMaterial.getResistance());
+        setHarvestLevel("pickaxe", tMaterial.getMiningLevel());
+
         if (resourceType == ResourceType.ORE) {
             setSoundType(SoundType.STONE);
         } else if (resourceType == ResourceType.BLOCK) {

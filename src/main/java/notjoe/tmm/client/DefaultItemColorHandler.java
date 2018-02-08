@@ -28,7 +28,7 @@ public class DefaultItemColorHandler implements IItemColor {
     public int getItemColor(ItemMaterial item) {
         TMaterial material = item.getTMaterial();
         if (material != null && !material.getCustomModelFor(item.getResourceType()).isPresent()) {
-            return material.getRgbColor();
+            return material.getColorInt();
         } else {
             return 0xFFFFFF;
         }
@@ -38,7 +38,7 @@ public class DefaultItemColorHandler implements IItemColor {
         BlockMaterial blockMaterial = (BlockMaterial) item.getBlock();
         TMaterial material = blockMaterial.getTMaterial();
         if (material != null && !material.getCustomModelFor(blockMaterial.getResourceType()).isPresent()) {
-            return material.getRgbColor();
+            return material.getColorInt();
         } else {
             return 0xFFFFFF;
         }

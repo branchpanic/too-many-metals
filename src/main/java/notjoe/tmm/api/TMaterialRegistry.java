@@ -74,4 +74,11 @@ public enum TMaterialRegistry {
             recipeRegistry.registerAll(recipeHelper.getPossibleCraftingRecipes().toArray(new IRecipe[]{}));
         });
     }
+
+    public void registerFurnaceRecipes() {
+        forEachMaterial((id, material) -> {
+            MaterialRecipeHelper recipeHelper = new MaterialRecipeHelper(material);
+            recipeHelper.addPossibleFurnaceRecipes();
+        });
+    }
 }

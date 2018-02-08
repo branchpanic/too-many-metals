@@ -6,18 +6,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import notjoe.tmm.TooManyMetals;
 import notjoe.tmm.api.TMaterial;
 
 public class FluidMaterial extends Fluid {
-    public static final ResourceLocation STILL_TEXTURE = new ResourceLocation(TooManyMetals.MODID, "blocks/metal_still");
-    public static final ResourceLocation FLOW_TEXTURE = new ResourceLocation(TooManyMetals.MODID, "blocks/metal_flow");
+    public static final ResourceLocation STILL_TEXTURE = new ResourceLocation("tmm:blocks/lava_still");
+    public static final ResourceLocation FLOW_TEXTURE = new ResourceLocation("tmm:blocks/lava_flow");
 
     @Getter
     private final TMaterial material;
 
     public FluidMaterial(TMaterial material) {
-        super(material.getName(), STILL_TEXTURE, FLOW_TEXTURE, material.getRgbColor());
+        super(material.getName(), STILL_TEXTURE, FLOW_TEXTURE, material.getColor());
         this.material = material;
         setDensity(material.getFluidDensity());
         setLuminosity(material.getFluidLuminosity());

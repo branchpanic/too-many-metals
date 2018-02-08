@@ -49,6 +49,7 @@ public class RegistrationEvents {
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
         LOGGER.info("Recipe registering started.");
         TMaterialRegistry.INSTANCE.registerCraftingRecipes(event.getRegistry());
+        TMaterialRegistry.INSTANCE.registerFurnaceRecipes();
         LOGGER.info("Recipe registering finished.");
     }
 

@@ -1,5 +1,6 @@
 package notjoe.tmm.api;
 
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -76,14 +77,37 @@ public class MaterialRecipeHelper {
             }
         }
 
-        if (input.isAddingGearRecipes()) {
+        if (input.isAddingGearRecipes() && input.hasResourceType(ResourceType.GEAR)) {
             recipes.add(getGearRecipe());
         }
 
-        if (input.isAddingPlateRecipes()) {
+        if (input.isAddingPlateRecipes() && input.hasResourceType(ResourceType.PLATE)) {
             recipes.add(getPlateRecipe());
         }
 
         return recipes;
+    }
+
+    public void addPossibleFurnaceRecipes() {
+        if (!input.hasBaseResourceType()) {
+            return;
+        }
+
+        ResourceType baseResourceType = input.getBaseResourceType();
+
+        if (input.hasResourceType(ResourceType.ORE)) {
+            FurnaceRecipes.instance().addSmeltingRecipeForBlock(
+                    contentFactory.getBlock(input.getName(), ResourceType.ORE),
+                    contentFactory.getItemStack(input.getName(), baseResourceType),
+                    input.getSmeltingExperience());
+        }
+
+        if (input.hasResourceType(ResourceType.DUST)) {
+            FurnaceRecipes.instance().addSmeltingRecipe(
+                    contentFactory.getItemStack(input.getName(), ResourceType.DUST),
+                    contentFactory.getItemStack(input.getName(), baseResourceType),
+                    input.getSmeltingExperience()
+            );
+        }
     }
 }

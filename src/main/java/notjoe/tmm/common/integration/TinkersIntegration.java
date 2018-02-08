@@ -1,44 +1,72 @@
 package notjoe.tmm.common.integration;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.LoaderState;
+import net.minecraftforge.fml.common.Mod;
+import notjoe.tmm.api.TMaterialContentFactory;
 import notjoe.tmm.api.TMaterialRegistry;
+import slimeknights.tconstruct.library.TinkerRegistry;
+import slimeknights.tconstruct.library.materials.*;
+import slimeknights.tconstruct.tools.TinkerMaterials;
 
-import java.util.Map;
+@Mod.EventBusSubscriber
+public class TinkersIntegration implements Integrator {
 
-public class TinkersIntegration {
-    public static void sendSmelteryDefinitions() {
+    private void sendSmelteryDefinitions() {
+
         TMaterialRegistry.INSTANCE.forEachMaterial((id, material) -> {
-            NBTTagCompound compound = new NBTTagCompound();
-            compound.setString("fluid", material.getName());
-            compound.setString("ore", material.getOreDictSuffix());
-            compound.setBoolean("toolforge", true);
-
-            FMLInterModComms.sendMessage("tconstruct", "integrateSmeltery", compound);
-
-            if (material.isAlloy()) {
-                NBTTagList tagList = new NBTTagList();
-
-                NBTTagCompound outputFluid = new NBTTagCompound();
-                outputFluid.setString("FluidName", material.getName());
-                outputFluid.setInteger("Amount", 144);
-                tagList.appendTag(outputFluid);
-
-                Map<String, Double> alloyDefinition = material.getAlloyOf();
-
-                for (String fluidName : alloyDefinition.keySet()) {
-                    NBTTagCompound component = new NBTTagCompound();
-                    component.setString("FluidName", fluidName);
-                    component.setInteger("Amount", (int) (144 * alloyDefinition.get(fluidName)));
-                    tagList.appendTag(outputFluid);
-                }
-
-                NBTTagCompound alloyMessage = new NBTTagCompound();
-                alloyMessage.setTag("alloy", tagList);
-
-                FMLInterModComms.sendMessage("tconstruct", "alloy", alloyMessage);
+            if (!material.hasBaseResourceType()) {
+                return;
             }
+
+            if (material.isTinkersIntegration()) {
+                Material tinkersMaterial = new Material(material.getName(), material.getColorInt());
+                TinkerMaterials.materials.add(tinkersMaterial);
+                tinkersMaterial.setCraftable(material.isCraftableTinkersPart());
+                tinkersMaterial.setCastable(!material.isCraftableTinkersPart());
+                tinkersMaterial.setRepresentativeItem(TMaterialContentFactory.INSTANCE.getItemStack(material.getName(), material.getBaseResourceType()));
+                TinkerRegistry.addMaterialStats(tinkersMaterial,
+                        new HeadMaterialStats(
+                                material.getPartDurability(),
+                                material.getMiningSpeed(),
+                                material.getAttackDamage(),
+                                material.getToolHarvestLevel()
+                        ),
+
+                        new HandleMaterialStats(
+                                material.getHandleMultiplier(),
+                                material.getHandleBonus()
+                        ),
+
+                        new ExtraMaterialStats(
+                                material.getHandleBonus()
+                        ),
+
+                        new BowMaterialStats(
+                                material.getBowDrawspeed(),
+                                material.getBowRange(),
+                                material.getBowBonusDamage()
+                        ));
+
+                TinkerRegistry.integrate(tinkersMaterial, TMaterialContentFactory.INSTANCE.getFluid(material.getName()), material.getOreDictSuffix());
+            } else {
+                TinkerRegistry.integrate(TMaterialContentFactory.INSTANCE.getFluid(material.getName()), material.getOreDictSuffix());
+            }
+
         });
+    }
+
+    @Override
+    public String getIntegrationID() {
+        return "tconstruct";
+    }
+
+    @Override
+    public void doIntegration() {
+        sendSmelteryDefinitions();
+    }
+
+    @Override
+    public LoaderState getTargetState() {
+        return LoaderState.PREINITIALIZATION;
     }
 }
