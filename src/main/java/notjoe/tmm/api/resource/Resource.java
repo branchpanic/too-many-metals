@@ -1,5 +1,9 @@
 package notjoe.tmm.api.resource;
 
+/**
+ * Default, standard resources provided by TMM. Indirect expressions defined here will have crafting recipes added
+ * automatically due to common usage.
+ */
 public enum Resource implements ResourceType {
     NUGGET(false, true, 1),
     INGOT(false, true, 9),
