@@ -2,8 +2,6 @@ package notjoe.tmm.common.integration;
 
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.Mod;
-import notjoe.tmm.api.TMaterialContentFactory;
-import notjoe.tmm.api.TMaterialRegistry;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.materials.*;
 import slimeknights.tconstruct.tools.TinkerMaterials;

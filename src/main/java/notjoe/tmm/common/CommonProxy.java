@@ -3,11 +3,10 @@ package notjoe.tmm.common;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import notjoe.tmm.api.TMaterial;
-import notjoe.tmm.api.TMaterialRegistry;
-import notjoe.tmm.common.configuration.MaterialLoader;
+import notjoe.tmm.api.material.MaterialDefinition;
 import notjoe.tmm.common.configuration.ModConfig;
 import notjoe.tmm.common.integration.IntegrationHandler;
+import notjoe.tmm.common.provider.MaterialDefinitionProvider;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,8 +17,8 @@ import static notjoe.tmm.TooManyMetals.LOGGER;
 public class CommonProxy {
     public static IntegrationHandler integrationHandler = new IntegrationHandler();
 
-    private List<TMaterial> loadMaterials(File directory) {
-        MaterialLoader loader = new MaterialLoader(directory);
+    private List<MaterialDefinition> loadMaterials(File directory) {
+        MaterialDefinitionProvider loader = new MaterialDefinitionProvider(directory);
 
         try {
             loader.loadData();
@@ -31,10 +30,10 @@ public class CommonProxy {
         return loader.getDefinedMaterials();
     }
 
-    private void listMaterials(List<TMaterial> materials) {
+    private void listMaterials(List<MaterialDefinition> materials) {
         LOGGER.info("== TMM registered the following materials:");
         LOGGER.info(String.format("  %-3s%-30s", "ID", "Name"));
-        for (TMaterial material : materials) {
+        for (MaterialDefinition material : materials) {
             LOGGER.info(String.format("  %-3d%-30s",
                     TMaterialRegistry.INSTANCE.getIDFromName(material.getName()),
                     material.getName()));
@@ -45,7 +44,7 @@ public class CommonProxy {
     public void onPreInit(FMLPreInitializationEvent event) {
         File configDirectory = new File(event.getModConfigurationDirectory(), "TooManyMetals");
 
-        List<TMaterial> registeredMaterials = loadMaterials(configDirectory);
+        List<MaterialDefinition> registeredMaterials = loadMaterials(configDirectory);
 
         if (ModConfig.logMaterials) {
             listMaterials(registeredMaterials);

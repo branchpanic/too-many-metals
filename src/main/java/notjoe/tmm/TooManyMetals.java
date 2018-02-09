@@ -19,7 +19,7 @@ public class TooManyMetals {
             serverSide = "notjoe.tmm.common.CommonProxy")
     public static CommonProxy PROXY;
     public static Logger LOGGER;
-    a
+
     static {
         FluidRegistry.enableUniversalBucket();
     }

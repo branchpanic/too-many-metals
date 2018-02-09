@@ -1,65 +1,73 @@
 package notjoe.tmm.common;
 
+import io.vavr.collection.Vector;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import notjoe.tmm.TooManyMetals;
-import notjoe.tmm.api.TMaterialContentFactory;
-import notjoe.tmm.api.TMaterialRegistry;
-import notjoe.tmm.common.content.BlockMaterial;
-import notjoe.tmm.common.content.ItemBlockMaterial;
-import notjoe.tmm.common.content.ItemMaterial;
+import net.minecraftforge.registries.IForgeRegistry;
+import notjoe.tmm.api.material.MaterialDefinition;
+import notjoe.tmm.api.resource.ResourceType;
 
-import java.util.stream.Collectors;
+import javax.inject.Inject;
 
 import static notjoe.tmm.TooManyMetals.LOGGER;
 
-@Mod.EventBusSubscriber(modid = TooManyMetals.MODID)
 public class RegistrationEvents {
-    private static TMaterialContentFactory contentFactory = TMaterialContentFactory.INSTANCE;
+    private Vector<MaterialDefinition> materialDefinitions;
 
-    @SubscribeEvent
-    public static void onRegisterBlocks(RegistryEvent.Register<Block> blockRegistryEvent) {
-        LOGGER.info("Block registering started.");
-        blockRegistryEvent.getRegistry().registerAll(contentFactory.getBlocks().toArray(new BlockMaterial[]{}));
-        LOGGER.info("Block registering finished.");
-    }
-
-    @SubscribeEvent
-    public static void onRegisterItems(RegistryEvent.Register<Item> itemRegistryEvent) {
-        LOGGER.info("Item registering started.");
-        itemRegistryEvent.getRegistry().registerAll(contentFactory.getItems().toArray(new ItemMaterial[]{}));
-        itemRegistryEvent.getRegistry().registerAll(contentFactory.getBlocks()
-                .stream()
-                .map(ItemBlockMaterial::new)
-                .collect(Collectors.toList())
-                .toArray(new ItemBlock[]{}));
-        LOGGER.info("Item registering finished.");
+    @Inject
+    public RegistrationEvents(Vector<MaterialDefinition> materialDefinitions) {
+        this.materialDefinitions = materialDefinitions;
     }
 
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
         LOGGER.info("Recipe registering started.");
-        TMaterialRegistry.INSTANCE.registerCraftingRecipes(event.getRegistry());
-        TMaterialRegistry.INSTANCE.registerFurnaceRecipes();
+
+
         LOGGER.info("Recipe registering finished.");
     }
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void registerModels(ModelRegistryEvent event) {
-        contentFactory.getItems().forEach(ItemMaterial::registerModels);
-        contentFactory.getBlocks().forEach(blockMaterial -> {
-            blockMaterial.registerModels();
-            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(blockMaterial), 0, blockMaterial.getModelResourceLocation());
-        });
+        LOGGER.info("Model registering started.");
+
+        LOGGER.info("Model registering finished.");
+    }
+
+    @SubscribeEvent
+    public void registerBlocks(RegistryEvent.Register<Block> blockRegistryEvent) {
+        LOGGER.info("Block registering started.");
+
+        IForgeRegistry<Block> blockRegistry = blockRegistryEvent.getRegistry();
+
+        for (MaterialDefinition materialDefinition : materialDefinitions) {
+            materialDefinition.getResourceProperties().getAvailableResourceTypes()
+                    .filter(ResourceType::isBlock)
+                    .forEach(resourceType -> blockRegistry.register(materialDefinition.createBlock(resourceType).get()));
+        }
+
+        LOGGER.info("Block registering finished.");
+    }
+
+    @SubscribeEvent
+    public void registerItems(RegistryEvent.Register<Item> itemRegistryEvent) {
+        LOGGER.info("Item registering started.");
+
+        IForgeRegistry<Item> blockRegistry = itemRegistryEvent.getRegistry();
+
+        for (MaterialDefinition materialDefinition : materialDefinitions) {
+            materialDefinition.getResourceProperties().getAvailableResourceTypes()
+                    .filter(ResourceType::isBlock)
+                    .forEach(resourceType -> blockRegistry.register(materialDefinition.createItem(resourceType).get()));
+        }
+
+        LOGGER.info("Item registering finished.");
     }
 }

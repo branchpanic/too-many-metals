@@ -3,8 +3,6 @@ package notjoe.tmm.common.integration;
 import cofh.api.util.ThermalExpansionHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.LoaderState;
-import notjoe.tmm.api.TMaterialContentFactory;
-import notjoe.tmm.api.TMaterialRegistry;
 
 public class ThermalExpansionIntegration implements Integrator {
     private static final TMaterialContentFactory contentFactory = TMaterialContentFactory.INSTANCE;
